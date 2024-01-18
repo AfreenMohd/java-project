@@ -1,0 +1,547 @@
+package project;
+
+
+import javax.swing.*;
+
+import java.awt.event.*;
+
+import java.util.HashMap;
+
+import java.util.Map;
+
+
+
+public class Project {
+
+
+
+    private JFrame frame1, frame2, pharmacyFrame;
+
+    private Map<String, Patient> patients;
+
+
+
+    public Project() {
+
+        // Initialize patients map
+
+        patients = new HashMap<>();
+
+        patients.put("John Doe", new Patient("John Doe", 30, "Male", 175,
+
+                "Consultation - Jan 2023: Fever, prescribed antibiotics.\n" +
+
+                        "Consultation - May 2023: Allergy symptoms, antihistamines prescribed.",
+
+                "High blood pressure, Allergies"));
+
+        patients.put("Alice Smith", new Patient("Alice Smith", 25, "Female", 162,
+
+                "Consultation - Mar 2023: Asthma, prescribed inhaler.", "Asthma"));
+
+
+
+        // Frame 1 creation
+
+        frame1 = new JFrame("First Frame");
+
+        JButton doctorLoginButton = new JButton("Doctor Login");
+
+        JButton pharmacyButton = new JButton("Pharmacy");
+
+
+
+        // Frame 1 layout
+
+        frame1.setLayout(null);
+
+        doctorLoginButton.setBounds(220, 300, 150, 30);
+
+        pharmacyButton.setBounds(420, 300, 150, 30);
+
+
+
+        // Frame 1 action listeners
+
+        doctorLoginButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+
+                frame1.setVisible(false);
+
+                openDoctorLoginFrame();
+
+            }
+
+        });
+
+
+
+        pharmacyButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+
+                openPharmacyFrame();
+
+            }
+
+        });
+
+
+
+        // Add components to frame 1
+
+        frame1.add(doctorLoginButton);
+
+        frame1.add(pharmacyButton);
+
+
+
+        frame1.setSize(800, 800);
+
+        frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        frame1.setVisible(true);
+
+    }
+
+
+
+    public void openDoctorLoginFrame() {
+
+        // Frame 2 creation (Doctor Login)
+
+        frame2 = new JFrame("DOCTOR LOGIN");
+
+        JTextField usernameField = new JTextField();
+
+        JPasswordField passwordField = new JPasswordField();
+
+        JButton loginButton = new JButton("Login");
+
+        JLabel l1 = new JLabel("username:");
+
+        JLabel l2 = new JLabel("password:");
+
+
+
+        // Frame 2 layout
+
+        frame2.setLayout(null);
+
+        usernameField.setBounds(220, 100, 200, 25);
+
+        passwordField.setBounds(220, 150, 200, 25);
+
+        l1.setBounds(100, 100, 200, 25);
+
+        l2.setBounds(100, 150, 200, 25);
+
+        loginButton.setBounds(250, 200, 100, 30);
+
+
+
+        // Frame 2 action listeners
+
+        loginButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+
+                String username = usernameField.getText();
+
+                String password = new String(passwordField.getPassword());
+
+
+
+                if (isValidDoctorLogin(username, password)) {
+
+                    frame2.setVisible(false);
+
+                    JOptionPane.showMessageDialog(frame2, "Login successful.");
+
+                    openDoctorMainFrame();
+
+                } else {
+
+                    JOptionPane.showMessageDialog(frame2, "Invalid username or password. Please try again.");
+
+                }
+
+            }
+
+        });
+
+
+
+        // Add components to frame 2
+
+        frame2.add(usernameField);
+
+        frame2.add(passwordField);
+
+        frame2.add(loginButton);
+
+        frame2.add(l1);
+
+        frame2.add(l2);
+
+
+
+        frame2.setSize(600, 400);
+
+        frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        frame2.setVisible(true);
+
+    }
+
+
+
+    public void openDoctorMainFrame() {
+
+        // Frame for Doctor's Main Interface
+
+        JFrame doctorMainFrame = new JFrame("Doctor Main Interface");
+
+
+
+        // Create components for selecting patients
+
+        JComboBox<String> patientList = new JComboBox<>(patients.keySet().toArray(new String[0]));
+
+        JButton viewDetailsButton = new JButton("View Patient Details");
+
+        JTextArea patientDetailsArea = new JTextArea();
+
+
+
+        // Layout
+
+        doctorMainFrame.setLayout(null);
+
+        patientList.setBounds(50, 50, 200, 25);
+
+        viewDetailsButton.setBounds(260, 50, 150, 25);
+
+        patientDetailsArea.setBounds(50, 100, 300, 200);
+
+
+
+        // Action listener for View Details button
+
+        viewDetailsButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+
+                String selectedPatientName = (String) patientList.getSelectedItem();
+
+                Patient selectedPatient = patients.get(selectedPatientName);
+
+
+
+                if (selectedPatient != null) {
+
+                    String details = "Name: " + selectedPatient.getName() + "\n" +
+
+                            "Age: " + selectedPatient.getAge() + "\n" +
+
+                            "Sex: " + selectedPatient.getSex() + "\n" +
+
+                            "Height: " + selectedPatient.getHeight() + " cm\n" +
+
+                            "Health Complications:\n" + selectedPatient.getHealthComplications() + "\n" +
+
+                            "Previous Consultations:\n" + selectedPatient.getPreviousConsultations();
+
+                    patientDetailsArea.setText(details);
+
+                } else {
+
+                    patientDetailsArea.setText("Patient not found.");
+
+                }
+
+            }
+
+        });
+
+
+
+        // Add components to the main frame
+
+        doctorMainFrame.add(patientList);
+
+        doctorMainFrame.add(viewDetailsButton);
+
+        doctorMainFrame.add(patientDetailsArea);
+
+
+
+        // Set frame properties
+
+        doctorMainFrame.setSize(400, 400);
+
+        doctorMainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        doctorMainFrame.setVisible(true);
+
+    }
+
+
+
+    public void openPharmacyFrame() {
+
+        // Frame for Pharmacy Interface
+
+        pharmacyFrame = new JFrame("PHARMACY");
+
+
+
+        // Create components for displaying tablets and controlling quantities
+
+        JTextArea tabletsArea = new JTextArea();
+
+        JButton increaseButton = new JButton("+");
+
+        JButton decreaseButton = new JButton("-");
+
+        Map<String, Integer> tabletQuantities = new HashMap<>();
+
+        tabletQuantities.put("Tablet A", 80);
+
+        tabletQuantities.put("Tablet B", 80);
+
+        tabletQuantities.put("Tablet C", 80);
+
+
+
+        // Layout
+
+        pharmacyFrame.setLayout(null);
+
+        tabletsArea.setBounds(50, 50, 300, 200);
+
+        increaseButton.setBounds(50, 270, 50, 30);
+
+        decreaseButton.setBounds(110, 270, 50, 30);
+
+
+
+        // Add tablet names and quantities to the tablets area
+
+        updateTabletsArea(tabletsArea, tabletQuantities);
+
+
+
+        // Increase button action listener
+
+        increaseButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+
+                String selectedTablet = JOptionPane.showInputDialog(pharmacyFrame, "Enter tablet name:");
+
+                if (tabletQuantities.containsKey(selectedTablet)) {
+
+                    int currentQuantity = tabletQuantities.get(selectedTablet);
+
+                    tabletQuantities.put(selectedTablet, currentQuantity + 1);
+
+                    updateTabletsArea(tabletsArea, tabletQuantities);
+
+                } else {
+
+                    JOptionPane.showMessageDialog(pharmacyFrame, "Invalid tablet name.");
+
+                }
+
+            }
+
+        });
+
+
+
+        // Decrease button action listener
+
+        decreaseButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+
+                String selectedTablet = JOptionPane.showInputDialog(pharmacyFrame, "Enter tablet name:");
+
+                if (tabletQuantities.containsKey(selectedTablet)) {
+
+                    int currentQuantity = tabletQuantities.get(selectedTablet);
+
+                    if (currentQuantity > 0) {
+
+                        tabletQuantities.put(selectedTablet, currentQuantity - 1);
+
+                        updateTabletsArea(tabletsArea, tabletQuantities);
+
+                    } else {
+
+                        JOptionPane.showMessageDialog(pharmacyFrame, "Tablet quantity cannot be negative.");
+
+                    }
+
+                } else {
+
+                    JOptionPane.showMessageDialog(pharmacyFrame, "Invalid tablet name.");
+
+                }
+
+            }
+
+        });
+
+
+
+        // Add components to the pharmacy frame
+
+        pharmacyFrame.add(tabletsArea);
+
+        pharmacyFrame.add(increaseButton);
+
+        pharmacyFrame.add(decreaseButton);
+
+
+
+        // Set frame properties
+
+        pharmacyFrame.setSize(400, 400);
+
+        pharmacyFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Dispose the frame on close
+
+        pharmacyFrame.setVisible(true);
+
+    }
+
+
+
+    private void updateTabletsArea(JTextArea tabletsArea, Map<String, Integer> tabletQuantities) {
+
+        StringBuilder tabletsText = new StringBuilder("Available Tablets:\n");
+
+        for (Map.Entry<String, Integer> entry : tabletQuantities.entrySet()) {
+
+            tabletsText.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+
+        }
+
+        tabletsArea.setText(tabletsText.toString());
+
+    }
+
+
+
+    private boolean isValidDoctorLogin(String username, String password) {
+
+        return "doctor".equals(username) && "password123".equals(password);
+
+    }
+
+
+
+    public static void main(String[] args) {
+
+        SwingUtilities.invokeLater(new Runnable() {
+
+            public void run() {
+
+                new Project();
+
+            }
+
+        });
+
+    }
+
+
+
+    static class Patient {
+
+        private final String name;
+
+        private final int age;
+
+        private final String sex;
+
+        private final int height;
+
+        private final String previousConsultations;
+
+        private final String healthComplications;
+
+
+
+        public Patient(String name, int age, String sex, int height,
+
+                       String previousConsultations, String healthComplications) {
+
+            this.name = name;
+
+            this.age = age;
+
+            this.sex = sex;
+
+            this.height = height;
+
+            this.previousConsultations = previousConsultations;
+
+            this.healthComplications = healthComplications;
+
+        }
+
+
+
+        public String getName() {
+
+            return name;
+
+        }
+
+
+
+        public int getAge() {
+
+            return age;
+
+        }
+
+
+
+        public String getSex() {
+
+            return sex;
+
+        }
+
+
+
+        public int getHeight() {
+
+            return height;
+
+        }
+
+
+
+        public String getPreviousConsultations() {
+
+            return previousConsultations;
+
+        }
+
+
+
+        public String getHealthComplications() {
+
+            return healthComplications;
+
+        }
+
+    }
+
+}
+
